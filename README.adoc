@@ -1,0 +1,5 @@
+= csv-data-tools
+
+Tools for working with CSV data (or other basic tabular data formats)
+
+These scripts were moved from https://github.com/lyrasis/migrations-private[`migrations-private`], where they were no better documented... 
