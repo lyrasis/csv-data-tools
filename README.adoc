@@ -1,5 +1,89 @@
+:toc:
+:toc-placement!:
+:toclevels: 4
+
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
 = csv-data-tools
 
 Tools for working with CSV data (or other basic tabular data formats)
 
-These scripts were moved from https://github.com/lyrasis/migrations-private[`migrations-private`], where they were no better documented... 
+toc::[]
+
+== `file_info.rb`
+
+Given path to a directory, a file suffix, and an optional minimum file size (in bytes)...
+
+Prints to screen a the following info for all files with suffix in the directory:
+
+* size
+* result of unix `file` command (file encoding, presence of "very long lines," line terminators)
+
+Do `ruby file_info.rb` for parameters/options.
+
+Example output:
+
+----
+dbo_ZLocalUseAttribs.txt:
+  size: 814242
+  info: Little-endian UTF-16 Unicode text, with CRLF line terminators
+
+
+dbo_ZResultFields.txt:
+  size: 13274
+  info: Little-endian UTF-16 Unicode text, with CRLF line terminators
+
+
+dbo_dtproperties.txt:
+  size: 34462
+  info: Little-endian UTF-16 Unicode text, with very long lines, with CRLF line terminators
+----
+
+== `show_rows_with_column_ct.rb`
+
+Meant to be used to investigate specific files reported by `clean_convert_report.rb` as having bad structure (i.e. ragged columns: some row having different number of columns than other rows)
+
+Given path to file, delimiter name, number of columns you want to see rows for, and option number of rows you want to see...
+
+Outputs to screen rows with the given number of columns.
+
+This is useful for coming up with the specific find/replace mess you are going to have to implement to keep rows from being broken up in a ragged way.
+
+Generally I use this iteratively with edits made to a migration-specific copy of `clean_convert_report.rb` to eliminate or minimize the number of ragged-column files I end up having to manually fix for a migration.
+
+== `tables_and_columns.rb`
+
+Utility script for creating data review spreadsheet.
+
+Given a directory containing tabular data files, outputs two CSVs:
+
+* tables.csv
+** table/filename
+** column count
+** row count
+
+* columns.csv
+** table/filename
+** column name
+
+These become two tabs in a data review tracking/mapping Excel sheet.
+
+Do `ruby tables_and_columns.rb -h` for parameters/options.
+
+== `table_preview.rb`
+
+Useful for initial data review work.
+
+Reads all files with given file suffix in the given directory. For each, prints out the file/table name, headers, and the first 25 rows of data, nicely formatted, in one text file you can scroll/search through. You don't have to open a million files to get your head around the general shape and character of the data.
+
+*Requires `csvlook` from https://csvkit.readthedocs.io/en/latest/index.html[csvkit] to be installed and available in your PATH*
+
+Do `ruby table_preview.rb -h` for parameters/options.
+
+
