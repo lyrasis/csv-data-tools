@@ -2,7 +2,7 @@
 
 # Takes path to table, number of columns, delimiter name, and optional row limit
 # Prints to screen rows with that number of columns
-# Assumes tables have been converted to TAB SEPARATED
+
 require 'csv'
 require 'fileutils'
 require 'optparse'
@@ -11,7 +11,7 @@ require 'pry'
 
 options = {}
 OptionParser.new do |opts|
-  opts.banner = 'Usage: clean_convert_report.rb -i path-to-input-dir -s file-suffix -o path-to-output-directory'
+  opts.banner = 'Usage: show_rows_with_column_ct.rb -i path-to-input-file -d {delimiterName} -c INTEGER -l INTEGER'
 
   opts.on('-i', '--input PATH', 'Path to input table file') do |i|
     options[:input] = File.expand_path(i)
@@ -58,7 +58,7 @@ end
 
 rows = structure[options[:columns]]
 
-if rows.empty?
+if rows.nil? || rows.empty?
   puts "No rows with #{options[:columns]} columns"
 else
   to_print = options[:limit].nil? ? rows.length - 1 : options[:limit] - 1
