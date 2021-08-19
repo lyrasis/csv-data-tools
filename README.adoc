@@ -16,6 +16,16 @@ Tools for working with CSV data (or other basic tabular data formats)
 
 toc::[]
 
+== `clean_convert_report.rb`
+
+* Converts Windows UTF-16 to UTF8
+* Tries to fix EOL and TAB char within row values problems
+* Creates file_report.csv which:
+** reports the `file` output of the original files (before encoding conversion and attempted cleanup)
+** flags the files still having structural problems (ragged columns)
+
+WARNING: This script currently has some client-migration-specific stuff embedded in it that needs to be cleaned out. 
+
 == `file_info.rb`
 
 Given path to a directory, a file suffix, and an optional minimum file size (in bytes)...
