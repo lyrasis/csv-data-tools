@@ -38,7 +38,7 @@ results = {}
 FileData = Struct.new(:size, :file)
 
 def get_file_info(file)
-  info = `file #{file}`
+  info = `file -I #{file}`
 rescue StandardError => e
   e
 else
