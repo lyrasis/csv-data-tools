@@ -55,6 +55,27 @@ dbo_dtproperties.txt:
   info: Little-endian UTF-16 Unicode text, with very long lines, with CRLF line terminators
 ----
 
+== `profiler.rb`
+
+Given a directory containing CSV files, writes out two CSV reports:
+
+* summary - a row for each column in source CSVs, with the following columns:
+** table - source CSV name
+** column - column name
+** column index - for putting them in the order in which they appear in source document
+** uniq vals - count of unique values found in column
+** null vals - count of empty cells in column
+
+* details - a row for each unique value in each column in source CSVs, with the following columns:
+** table - source CSV name
+** column - column name
+** column index - for putting them in the order in which they appear in source document
+** value - a unique value found in column (puts "NULL VALUE/EMPTY FIELD" to represent that)
+** occurrences - number of time value occurs in column
+
+WARNING: There's a known bug where not all apparently empty fields are getting counted as "NULL VALUE/EMPTY FIELD". The number that get left out is small and I didn't have time to chase this down now, but will try to the next time I need this thing.
+
+
 == `show_rows_with_column_ct.rb`
 
 Meant to be used to investigate specific files reported by `clean_convert_report.rb` as having bad structure (i.e. ragged columns: some row having different number of columns than other rows)
