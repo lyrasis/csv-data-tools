@@ -18,7 +18,7 @@ OptionParser.new do |opts|
   end
 
   opts.on('-m', '--min-file-size INTEGER', 'Minimum file size to report on, in bytes') do |m|
-    options[:min_file_size] = m
+    options[:min_file_size] = m.to_i
   end
 
   opts.on('-h', '--help', 'Prints this help') do
@@ -38,7 +38,7 @@ results = {}
 FileData = Struct.new(:size, :file)
 
 def get_file_info(file)
-  info = `file #{file}`
+  info = `file -I #{file}`
 rescue StandardError => e
   e
 else
