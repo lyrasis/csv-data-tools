@@ -9,6 +9,11 @@ require 'fileutils'
 require 'optparse'
 require 'ostruct'
 require 'pp'
+require 'pry'
+
+# -d / -t are handled by the option you use to run the script
+# other options from https://csvkit.readthedocs.io/en/1.0.6/scripts/csvlook.html and
+#   https://csvkit.readthedocs.io/en/1.0.6/common_arguments.html can be set as a string here
 
 options = {}
 OptionParser.new do |opts|
@@ -26,11 +31,36 @@ OptionParser.new do |opts|
     options[:suffix] = ".#{s.delete_prefix('.')}"
   end
 
+  opts.on('-d', '--delimiter STRING', 'comma, pipe, tab, or literal string') do |d|
+    options[:delimiter] = d
+  end
+
+  opts.on('-m', '--max_rows INTEGER', 'maximum number of rows to output') do |m|
+    options[:max_rows] = m
+  end
+
   opts.on('-h', '--help', 'Prints this help') do
     puts opts
     exit
   end
 end.parse!
+
+CustomCsvlookOptions = '-u 1 -y 0 -I'
+
+def get_delim_opt(delim)
+  lookup = {
+    'comma' => '-d ,',
+    'pipe' => '-d |',
+    'tab' => '-t'
+  }
+
+  common_value = lookup[delim]
+  return common_value if common_value
+
+  "-d #{delim}"
+end
+              
+delim_opt = get_delim_opt(options[:delimiter])
 
 files = Dir.children(options[:input])
   .select{ |name| name.downcase.end_with?(options[:suffix]) }
@@ -45,7 +75,8 @@ File.open("#{options[:output]}/table_preview.txt", 'w') do |f|
     f.puts "-=-=-=-=-=-=-=-=-=-=-=-=-"
     f.puts table
     f.puts "-=-=-=-=-=-=-=-=-=-=-=-=-"
-    look = `csvlook -t --max-rows 27 #{table}`
+    cmd = "csvlook #{delim_opt} #{CustomCsvlookOptions} --max-rows #{options[:max_rows]} #{table}"
+    look = `#{cmd}`
     f.puts look
     f.puts "\n\n"
   end
