@@ -16,15 +16,32 @@ Tools for working with CSV data (or other basic tabular data formats)
 
 toc::[]
 
+== `check_structure.rb`
+WARNING: This one needs some tweaking to make it support non-basic CSV format. (i.e. If you need to pass in special CSV opts to get the CSV library to parse your files)
+
+* Writes out a report on whether the rows of a CSV all have the same number of columns
+* If a file has any ragged rows, it tells you how many columns the weird rows have and gives you the row numbers of up to 3 rows having that number of columns.
+* Where the example field for a non-ok file is blank, that's the expected/correct number of columns based on the number of headers
+
 == `clean_convert_report.rb`
 
-* Converts Windows UTF-16 to UTF8
-* Tries to fix EOL and TAB char within row values problems
-* Creates file_report.csv which:
-** reports the `file` output of the original files (before encoding conversion and attempted cleanup)
-** flags the files still having structural problems (ragged columns)
+This was a mess and I deleted it. It's being replaced by simpler scripts that do specific parts of what this did.
 
-WARNING: This script currently has some client-migration-specific stuff embedded in it that needs to be cleaned out. 
+== `convert_encoding.rb`
+
+WARNING: script not finished. **Do not use yet**
+
+[IMPORTANT]
+====
+If you have not installed or used the `charlock_holmes` gem before, you need to:
+* install icu4c if you do not have it:
+
+`brew install icu4c`
+
+* run the following command in your terminal before running this script:
+
+`bundle config build.charlock_holmes --with-icu-dir=/usr/local/opt/icu4c`
+====
 
 == `file_info.rb`
 
