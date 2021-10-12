@@ -31,11 +31,26 @@ OptionParser.new do |opts|
     options[:suffix] = ".#{s.delete_prefix('.')}"
   end
 
+  opts.on('--details STRING', 'files or compile') do |details|
+    accepted = %w[compile files]
+    unless accepted.any?(details)
+      puts "Details mode must be one of: #{accepted.join(', ')}"
+      exit
+    end
+    
+    options[:details] = details
+  end
+
   opts.on('-h', '--help', 'Prints this help') do
     puts opts
     exit
   end
 end.parse!
+
+unless options.key?(:details)
+  puts 'No details mode specified. Defaulting to files.'
+  options[:details] = 'files' 
+end
 
 # clear out pre-existing reports
 if Dir.exist?(options[:output])
@@ -70,7 +85,7 @@ CSV::Converters[:stripplus] = lambda { |s|
 module Profiler
   class Column
     # columns that do not need to be profiled
-    Skippable = %w[gsrowversion loginid entereddate displayorder sortnumber bitmapname]
+    Skippable = %w[alphasort cn gsrowversion entereddate dateentered displayorder sortnumber sorttype bitmapname]
     
     def initialize(name, file, index)
       @name = name
@@ -79,7 +94,7 @@ module Profiler
       @values = {}
     end
 
-    def report_values
+    def report_values(details_mode)
       return if Skippable.any?(@name.downcase)
       return if @name.downcase.end_with?('id')
 
@@ -92,7 +107,8 @@ module Profiler
         outpath: @file.outpath
       }
       ColumnSummary.new(col_details, @values)
-      ColumnDetails.new(col_details, @values)
+      ColumnFile.new(col_details, @values) if details_mode == 'files'
+      ColumnDetails.new(col_details, @values) if details_mode == 'compile'
     end
 
     private
@@ -135,6 +151,23 @@ module Profiler
       CSV.open(@outpath, 'wb'){ |csv| csv << headers }
     end
   end
+
+  class ColumnFile < ColumnReport
+    private
+
+    def append_report
+      File.open(@outpath, 'w'){ |file| file.puts @hash.keys.join("\n") }
+    end
+    
+    def filename
+      "#{@table}_#{@column}.txt"
+    end
+
+    def write_headers
+      # no headers
+    end
+  end
+  
   
   class ColumnSummary < ColumnReport
     private
@@ -199,13 +232,13 @@ module Profiler
     def initialize(path, output)
       @path = path
       @outpath = output
-      @name = path.basename
+      @name = path.basename.to_s.delete_suffix(path.extname)
       @row_ct = csv.length
       @columns = set_up_columns
     end
 
-    def report_values
-      columns.each{ |column| column.report_values }
+    def report_values(details_mode)
+      columns.each{ |column| column.report_values(details_mode) }
     end
     
 
@@ -233,8 +266,5 @@ files.each do |path|
   file = Profiler::CSVFile.new(path, options[:output])
   puts "#{file.row_ct} rows -- #{file.columns.length} columns -- #{file.name}"
 
-  file.report_values  
+  file.report_values(options[:details])
 end
-
-
-
