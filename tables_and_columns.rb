@@ -23,6 +23,22 @@ OptionParser.new do |opts|
     options[:suffix] = ".#{s.delete_prefix('.')}"
   end
 
+  opts.on('-d', '--delimiter STRING', 'Field delimiter: tab, comma, pipe, unitsep ') do |d|
+    lookup = {
+      'comma' => ',',
+      'pipe' => '|',
+      'tab' => "\t",
+      'unitsep' => '␟'
+    }
+    delim = lookup[d]
+    unless delim
+      puts "Delimiter must be one of: #{lookup.keys.join(',')}"
+      exit
+    end
+    
+    options[:delimiter] = delim
+  end
+
   opts.on('-h', '--help', 'Prints this help') do
     puts opts
     exit
@@ -43,7 +59,7 @@ files = Dir.children(options[:input])
 # create key value pairs in filedata, populating keys with file paths and values with empty OpenStructs
 files.each do |file|
   filedata[file] = OpenStruct.new(
-    filename: File.basename(file, '.tsv').sub(/_l$/, ''),
+    filename: File.basename(file, options[:suffix]).sub(/_l$/, ''),
     row_ct: nil,
     column_ct: nil,
     columns: []
@@ -56,7 +72,7 @@ files.each do |file|
   rowct = %x{sed -n '=' #{file} | wc -l}.to_i
   filedata[file].row_ct = rowct - 1
 
-  headers = File.open(file, &:gets).chomp.split("\t")
+  headers = File.open(file, &:gets).chomp.split(options[:delimiter])
   filedata[file].column_ct = headers.size
   filedata[file].columns = headers 
 end
