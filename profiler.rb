@@ -58,8 +58,8 @@ CSV::Converters[:stripplus] = lambda { |s|
       s.strip
         .gsub(/  +/, ' ')
         .sub(/,$/, '')
-        .sub(/^%(LINEBREAK|CRLF)%/, '')
-        .sub(/%(LINEBREAK|CRLF)%$/, '')
+        .sub(/^%(LINEBREAK|CRLF|CR|TAB)%/, '')
+        .sub(/%(LINEBREAK|CRLF|CR|TAB)%$/, '')
         .strip
     end
   rescue ArgumentError
@@ -70,7 +70,7 @@ CSV::Converters[:stripplus] = lambda { |s|
 module Profiler
   class Column
     # columns that do not need to be profiled
-    Skippable = ['rowpopulated']
+    Skippable = %w[gsrowversion loginid entereddate displayorder sortnumber bitmapname]
     
     def initialize(name, file, index)
       @name = name
@@ -80,7 +80,8 @@ module Profiler
     end
 
     def report_values
-      return if Skippable.any?(@name)
+      return if Skippable.any?(@name.downcase)
+      return if @name.downcase.end_with?('id')
 
       puts "  Analyzing column: #{@name}..."
       @file.csv[@name].each{ |val| record_value(val) }
