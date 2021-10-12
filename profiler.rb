@@ -86,6 +86,7 @@ module Profiler
   class Column
     # columns that do not need to be profiled
     Skippable = %w[alphasort cn gsrowversion entereddate dateentered displayorder sortnumber sorttype bitmapname]
+    SkippableSuffixes = %w[id html]
     
     def initialize(name, file, index)
       @name = name
@@ -96,7 +97,8 @@ module Profiler
 
     def report_values(details_mode)
       return if Skippable.any?(@name.downcase)
-      return if @name.downcase.end_with?('id')
+      dc_name = @name.downcase
+      SkippableSuffixes.each{ |suffix| return if dc_name.end_with?(suffix) }
 
       puts "  Analyzing column: #{@name}..."
       @file.csv[@name].each{ |val| record_value(val) }
@@ -156,11 +158,13 @@ module Profiler
     private
 
     def append_report
-      File.open(@outpath, 'w'){ |file| file.puts @hash.keys.join("\n") }
+      File.open(@outpath, 'w') do |file|
+        @hash.each{ |value, ct| file.puts "#{ct},#{value}\n" }
+      end
     end
     
     def filename
-      "#{@table}_#{@column}.txt"
+      "#{@table}_#{@column}.csv"
     end
 
     def write_headers
