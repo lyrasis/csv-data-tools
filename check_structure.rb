@@ -12,19 +12,39 @@ require 'csv'
 require 'optparse'
 require 'pry'
 
-options = {}
+options = {
+  delimiter: ',',
+  suffix: 'csv'
+}
 OptionParser.new do |opts|
-  opts.banner = 'Usage: check_structure.rb -i path-to-input-dir -s file-suffix -o output_file'
+  opts.banner = 'Usage: check_structure.rb -i path-to-input-dir -s file_suffix -d delimiter_name -o output_file'
 
-  opts.on('-i', '--input PATH', 'Path to input directory containing files') do |i|
+  opts.on('-i', '--input PATH', String, 'Path to input directory containing files') do |i|
     options[:input] = File.expand_path(i)
   end
 
-  opts.on('-s', '--suffix STRING', 'File suffix, without dot') do |s|
+  opts.on('-s', '--suffix STRING', String, 'File suffix, without dot') do |s|
     options[:suffix] = ".#{s.delete_prefix('.')}"
   end
 
-  opts.on('-o', '--output PATH', 'Path to output CSV file') do |o|
+  opts.on('-d', '--delimiter STRING', String, 'Delimiter name: comma (default), tab, pipe') do |d|
+    translations = {
+      comma: ',',
+      pipe: '|',
+      tab: "\t"
+    }
+    allowed = translations.keys.map(&:to_s)
+    d_allowed = allowed.any?(d)
+
+    unless d_allowed
+      puts "#{d} is not an allowed delimiter value. Use one of: #{allowed.join(', ')}"
+      exit
+    end
+    
+    options[:delimiter] = translations[d.to_sym]
+  end
+
+  opts.on('-o', '--output PATH', String, 'Path to output CSV file') do |o|
     options[:output] = File.expand_path(o)
   end
 
@@ -36,10 +56,10 @@ end.parse!
 
 class Checker
   attr_reader :filename, :report
-  def initialize(path)
+  def initialize(path, delimiter)
     @path = path
     @filename = Pathname.new(path).basename
-    @rows = CSV.foreach(path)
+    @rows = CSV.foreach(path, col_sep: delimiter)
     @report = RowReport.new(@rows.first.length)
   end
 
@@ -174,7 +194,7 @@ files = Dir.children(options[:input])
   .map{ |name| "#{options[:input]}/#{name}" }
 
 files.each do |file|
-  checker = Checker.new(file)
+  checker = Checker.new(file, options[:delimiter])
   checker.check
   report.add_file_info(checker)
 end
