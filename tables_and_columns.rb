@@ -9,7 +9,7 @@ require 'pp'
 
 options = {}
 OptionParser.new do |opts|
-  opts.banner = 'Usage: tables_and_columns.rb -i path-to-input-dir -s file-suffix -o path-to-output-directory'
+  opts.banner = 'Usage: tables_and_columns.rb -i path-to-input-dir -s file-suffix -o path-to-output-directory -d comma'
 
   opts.on('-i', '--input PATH', 'Path to input directory containing files') do |i|
     options[:input] = File.expand_path(i)
@@ -85,7 +85,7 @@ end
 CSV.open("#{options[:output]}/columns.csv", 'w') do |csv|
   csv << %w[table column]
   filedata.each do |k, v|
-    v.columns.each{ |c| csv << [v.filename, c] }
+    v.columns.each{ |c| csv << [v.filename, c.delete_prefix('"').delete_suffix('"')] }
   end
 end
 
