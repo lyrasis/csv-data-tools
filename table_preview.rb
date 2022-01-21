@@ -17,7 +17,7 @@ require 'pry'
 
 options = {}
 OptionParser.new do |opts|
-  opts.banner = 'Usage: table_preview.rb -i path-to-input-dir -s file-suffix -o path-to-output-directory'
+  opts.banner = 'Usage: table_preview.rb -i path-to-input-dir -s file-suffix -o path-to-output-directory -d comma'
 
   opts.on('-i', '--input PATH', 'Path to input directory containing files') do |i|
     options[:input] = File.expand_path(i)
