@@ -17,7 +17,7 @@ Tools for working with CSV data (or other basic tabular data formats)
 toc::[]
 
 == `check_structure.rb`
-WARNING: This one needs some tweaking to make it support non-basic CSV format. (i.e. If you need to pass in special CSV opts to get the CSV library to parse your files)
+NOTE: Supports comma, tab, or pipe delimited files currently
 
 * Writes out a report on whether the rows of a CSV all have the same number of columns
 * If a file has any ragged rows, it tells you how many columns the weird rows have and gives you the row numbers of up to 3 rows having that number of columns.
