@@ -126,7 +126,7 @@ module Profiler
       @table = col_details[:file]
       @column = col_details[:column]
       @index = col_details[:index]
-      @outpath = File.join(col_details[:outpath], filename)
+      @outpath = File.join(col_details[:outpath], filename.gsub(/\W+/,'_'))
       write_headers unless File.exist?(@outpath)
       append_report
     end
