@@ -8,8 +8,8 @@ class ValueReplacer < Minitest::Test
     @path = File.expand_path("./support")
     @to_replace = "to_replace.csv"
     @input = "input.csv"
-    @value_hash = create_value_hash(@path,@to_replace)
-    replace_values(@path,@input,@value_hash,[1,2],delimiter:"|")
+    @value_hash = create_value_hash(path:@path,file:@to_replace)
+    replace_values(path:@path,file:@input,value_hash:@value_hash,indexes:[1,2],delimiter:"|")
     @data = CSV.read(File.join(@path,"#{@input[..-5]}_values_replaced.csv"))
   end
 

@@ -1,12 +1,14 @@
 require 'csv'
 
 # Creates a hash where the key is the value you want to replace
-# and the value is the value with which to replace
-# PATH is a string to the folder path
-# FILE is a string of the filename
-# ENCODING (nil) is a string indicating the character encoding for the file
-# If you want the CSV library to detect the character encoding, do not provide encoding
-def create_value_hash (path,file,encoding=nil)
+#   and the value is the value with which to replace
+# 
+# @param path [String] the folder path
+# @param file [String] the filename
+# @param encoding [String, Nil] the character encoding for the file. default is nil.
+#   If you want the CSV library to detect the character encoding, do not provide encoding
+# @return [Hash] the lookup hash used in #replace_values
+def create_value_hash (path:,file:,encoding:nil)
   filepath = File.join(path,file)
   value_hash = {}
   
@@ -18,20 +20,22 @@ def create_value_hash (path,file,encoding=nil)
 end
 
 # Given a CSV and a hash where the key is the value you want to replace
-# and the value is the value with which to replace,
-# create a new .csv file and replace values
-# PATH (string) is the folder path
-# FILE (string) is the filename
-# VALUE_HASH (hash) is a hash where the key is the value you want to replace
-# and the value is the value with which to replace. This is meant to be created using
-# create_value_hash
-# INDEXES(int or array of ints) are the indexes of the values to replace
-# ENCODING (default: nil, string) indicates the character encoding for the file
-# If you want the CSV library to detect the character encoding, do not provide encoding
-# DELIMITER (default: nil, string) is the delimiter if you have multivalued fields
-def replace_values (path,file,value_hash,indexes,encoding:nil,delimiter:nil)
+#   and the value is the value with which to replace,
+#   create a new .csv file and replace values
+# 
+# @param path [String] the folder path
+# @param file [String] the filename
+# @param value_hash [Hash] a hash where the key is the value you want to replace
+#   and the value is the value with which to replace. This is meant to be created using #create_value_hash
+# @param indexes [Integer, Array<Integer>] the column index(es) within the CSV row array of the 
+#   values to look up and replace
+# @param encoding [String, Nil] the character encoding for the file. default is nil.
+#   If you want the CSV library to detect the character encoding, do not provide encoding
+# @param delimiter [String, Nil] the delimiter if you have multivalued fields. default is nil
+# @return [Nil] returns nothing. instead writes to .csv file
+def replace_values (path:,file:,value_hash:,indexes:,encoding:nil,delimiter:nil)
   filepath = File.join(path,file)
-  fields = [fields].flatten
+  indexes = [indexes].flatten
   CSV.open(File.join(path,"#{file[..-5]}_values_replaced.csv"),"wb") do |csv|
     CSV.foreach(filepath,encoding: encoding) do |row|
       new_row = row
