@@ -1,7 +1,8 @@
 require 'csv'
 
 # Creates a hash where the key is the value you want to replace
-#   and the value is the value with which to replace
+#   and the value is the value with which to replace. Assumes
+#   first column is the key and second is the value
 # 
 # @param path [String] the folder path
 # @param file [String] the filename
