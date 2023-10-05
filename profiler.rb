@@ -32,6 +32,9 @@ OptionParser.new do |opts|
   end
 
   opts.on('--details STRING', 'files or compile') do |details|
+  opts.on("-c", "--csvopts STRING", "CSV options hash in single quotes") do |c|
+    options[:csvopts] = eval(c)
+  end
     accepted = %w[compile files]
     unless accepted.any?(details)
       puts "Details mode must be one of: #{accepted.join(', ')}"
@@ -232,10 +235,14 @@ module Profiler
   end
 
   class CSVFile
-    attr_reader :path, :name, :row_ct, :columns, :outpath
-    def initialize(path, output)
+    attr_reader :path, :name, :row_ct, :columns, :outpath, :csvopts
+    DEFAULT_OPTS = {headers: true, header_converters: [:downcase],
+                    converters: [:stripplus], skip_blanks: true,
+                    empty_value: nil}
+    def initialize(path, output, csvopts)
       @path = path
       @outpath = output
+      @csvopts = set_csvopts(csvopts)
       @name = path.basename.to_s.delete_suffix(path.extname)
       @row_ct = csv.length
       @columns = set_up_columns
@@ -252,10 +259,15 @@ module Profiler
 
     private
 
+    def set_csvopts(csvopts)
+      return DEFAULT_OPTS unless csvopts
+
+      DEFAULT_OPTS.merge(csvopts)
+    end
+
     def parse_csv
       puts "Parsing #{path}..."
-      CSV.parse(File.read(path), headers: true, header_converters: [:downcase],
-                converters: [:stripplus], skip_blanks: true, empty_value: nil).by_col!
+      CSV.parse(File.read(path), **csvopts).by_col!
     end
     
     def set_up_columns
@@ -267,7 +279,7 @@ end
 
 files = Profiler::Files.new(options[:input], options[:suffix])
 files.each do |path|
-  file = Profiler::CSVFile.new(path, options[:output])
+  file = Profiler::CSVFile.new(path, options[:output], options[:csvopts])
   puts "#{file.row_ct} rows -- #{file.columns.length} columns -- #{file.name}"
 
   file.report_values(options[:details])
