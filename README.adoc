@@ -98,12 +98,11 @@ Reformats a list of CSVs, allowing you to change the separator and escape charac
 
 Usage: `reformat_csv.pl [options] FILES`
 
-Options
-
-* --input_sep - Separator character in input CSVs (default: ,)
-* --input_esc - Escape character in input CSVs (default: ")
-* --output_sep - Separator character in output CSVs (default: ,)
-* --output_esc - Escape character in output CSVs (default: ")
+.Options:
+- input_sep - Separator character in input CSVs (default: ,)
+- input_esc - Escape character in input CSVs (default: ")
+- output_sep - Separator character in output CSVs (default: ,)
+- output_esc - Escape character in output CSVs (default: ")
 
 While handy, this program primarily exists to take adavantage of Text::CSV_XS's ability to deal with unescaped quotes in fields. To do this, set input_esc to anything other than '"', for instance '#'.
 
