@@ -74,6 +74,33 @@ dbo_dtproperties.txt:
 
 == `profiler.rb`
 
+Usage example: Defaults:
+
+`ruby profiler.rb -i ~/data/export/ -o ~/data/profiled`
+
+All `.csv` files in `~/data/export` directory are included, and the default details mode is `files`. Default options sent to Ruby standard library CSV parser are:
+
+[source,ruby]
+----
+{headers: true, header_converters: [:downcase], converters: [:stripplus],
+  skip_blanks: true, empty_value: nil}
+----
+
+Usage example: compiled details for tab-separated .tsv files:
+
+`ruby profiler.rb -i ~/data/export/ -o ~/data/profiled -s tsv -c '{col_sep: "\t"} -d compiled'`
+
+All `.tsv` files in `~/data/export` directory are included. The Ruby standard library CSV parser option `col_sep: "\t"` is merged into the default option hash shown above.
+
+=== When `--details file`
+
+One `.csv` file written to output directory per table column.
+
+For example, if source file `addresses.csv` has a `:city` column, there is an `address_city.csv` file written.
+
+The output CSV has one row per unique value found in the source column. The first column is the occurrence count of the value in the source column. The second column is the value.
+
+=== When `--details compile`
 Given a directory containing CSV files, writes out two CSV reports:
 
 * summary - a row for each column in source CSVs, with the following columns:
