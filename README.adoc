@@ -92,6 +92,21 @@ Given a directory containing CSV files, writes out two CSV reports:
 
 WARNING: There's a known bug where not all apparently empty fields are getting counted as "NULL VALUE/EMPTY FIELD". The number that get left out is small and I didn't have time to chase this down now, but will try to the next time I need this thing.
 
+== `reformat_csv.pl`
+
+Reformats a list of CSVs, allowing you to change the separator and escape characters.  Output is to STDOUT.
+
+Usage: `reformat_csv.pl [options] FILES`
+
+Options
+* --input_sep - Separator character in input CSVs (default: ,)
+* --input_esc - Escape character in input CSVs (default: ")
+* --output_sep - Separator character in output CSVs (default: ,)
+* --output_esc - Escape character in output CSVs (default: ")
+
+While handy, this program primarily exists to take adavantage of Text::CSV_XS's ability to deal with unescaped quotes in fields. To do this, set input_esc to anything other than '"', for instance '#'.
+
+*Requires you have the Text::CSV_XS Perl module installed*
 
 == `show_rows_with_column_ct.rb`
 
