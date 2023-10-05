@@ -121,7 +121,14 @@ WARNING: There's a known bug where not all apparently empty fields are getting c
 
 == `reformat_csv.pl`
 
-Reformats a list of CSVs, allowing you to change the separator and escape characters.  Output is to STDOUT.
+[[reformatcsv]]Reformats a list of CSVs, allowing you to change the separator and escape characters.  Output is to STDOUT.
+
+[TIP]
+====
+This can handle parsing `\n` inside quoted fields that contain unescaped quotes. We did not find a Ruby CSV parsing solution that handled this particular flavor of CSV horror. _(Thanks, potential client legacy system which shall not be named...)_
+
+To run this script on all files in a directory, writing the reformatted files to another directory, see <<reformattables,`reformat_tables.rb`>>.
+====
 
 Usage: `reformat_csv.pl [options] FILES`
 
@@ -133,9 +140,23 @@ Usage example: `perl reformat_csv.pl --input_sep ';' --input_esc '#' ~/data/test
 - output_sep - Separator character in output CSVs (default: ,)
 - output_esc - Escape character in output CSVs (default: ")
 
+TIP: To pass TAB as `input_sep` or `output_sep`, use the literal tab character by typing `Ctrl-v`, then `TAB` on the command line.
+
 While handy, this program primarily exists to take adavantage of Text::CSV_XS's ability to deal with unescaped quotes in fields. To do this, set input_esc to anything other than '"', for instance '#'.
 
 *Requires you have the Text::CSV_XS Perl module installed*
+
+== `reformat_tables.rb`
+
+[[reformattables]]This is a wrapper around `reformat_csv.pl`. *It requires you have Perl and the `Text::CSV_XS` module installed.*
+
+The input/output sep and esc options are the same as described for <<reformatcsv,`reformat_csv.pl`>>
+
+The only required argument is `--input` (or `-i`), which specifies the directory containing the tabular data files you wish to reformat.
+
+If no `--output`/`-o` value is given, a new directory called `reformatted` is created in your `--input` directory, and reformatted files are saved in new directory. Any other directory value can be provided. If the directory does not exist at run time, it will be created.
+
+File suffix (`--suffix`/`-s`) defaults to `csv`.
 
 == `show_rows_with_column_ct.rb`
 
