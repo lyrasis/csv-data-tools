@@ -98,6 +98,8 @@ Reformats a list of CSVs, allowing you to change the separator and escape charac
 
 Usage: `reformat_csv.pl [options] FILES`
 
+Usage example: `perl reformat_csv.pl --input_sep ';' --input_esc '#' ~/data/test.csv > ~/data/test_fix.csv`
+
 .Options:
 - input_sep - Separator character in input CSVs (default: ,)
 - input_esc - Escape character in input CSVs (default: ")
@@ -148,5 +150,3 @@ Reads all files with given file suffix in the given directory. For each, prints 
 *Requires `csvlook` from https://csvkit.readthedocs.io/en/latest/index.html[csvkit] to be installed and available in your PATH*
 
 Do `ruby table_preview.rb -h` for parameters/options.
-
-
