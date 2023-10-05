@@ -99,6 +99,7 @@ Reformats a list of CSVs, allowing you to change the separator and escape charac
 Usage: `reformat_csv.pl [options] FILES`
 
 Options
+
 * --input_sep - Separator character in input CSVs (default: ,)
 * --input_esc - Escape character in input CSVs (default: ")
 * --output_sep - Separator character in output CSVs (default: ,)
