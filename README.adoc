@@ -158,6 +158,12 @@ If no `--output`/`-o` value is given, a new directory called `reformatted` is cr
 
 File suffix (`--suffix`/`-s`) defaults to `csv`.
 
+Usage example:
+
+`ruby reformat_tables.rb -i ~/data/lafayette/export --input_sep ';' --input_esc "#" --output_sep '    '`
+
+Writes semicolon delimited .csv files with unescaped quotes to tab-delimited.
+
 == `show_rows_with_column_ct.rb`
 
 Meant to be used to investigate specific files reported by `clean_convert_report.rb` as having bad structure (i.e. ragged columns: some row having different number of columns than other rows)
