@@ -50,10 +50,8 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-unless options.key?(:details)
-  puts "No details mode specified. Defaulting to files."
-  options[:details] = "files"
-end
+options[:details] = "files" unless options.key?(:details)
+options[:suffix] = ".csv" unless options.key?(:suffix)
 
 # clear out pre-existing reports
 if Dir.exist?(options[:output])
