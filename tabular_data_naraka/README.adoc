@@ -1,0 +1,39 @@
+:toc:
+:toc-placement!:
+:toclevels: 4
+
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+= Tabular data Naraka
+
+__________________________________________________
+In Buddhism, Naraka refers to the worlds of greatest suffering. Buddhist texts describe a vast array of tortures and realms of torment in Naraka [...] The descriptions vary from text to text and are not always consistent with each other.footnote:[https://en.wikipedia.org/wiki/Naraka#Buddhism]
+__________________________________________________
+
+...much like tabular data dialects.
+
+Here lives a collection of torments for testing various approaches to just getting the data into a basic, structurally valid format you can actually work with.
+
+toc::[]
+
+== See also
+
+* https://github.com/w3c/csvw/tree/gh-pages/tests[CSV on the Web working group's test suite]
+* https://github.com/Data-Liberation-Front/csvlint.rb/blob/main/README.md#tests[csvlint.rb's implementation of the above]
+
+== Specimens
+
+=== artists_test.csv
+
+source:: exported from commercial system by potential migration client; faked up text but retains charming other features
+col_sep:: `;`
+row_sep:: `\n`
+quote_char:: `"`
+escape_char:: NONE!
+interesting characteristics:: unescaped `"` characters within quoted fields; `\n` appearing in quoted fields, before and after unescaped `"`
