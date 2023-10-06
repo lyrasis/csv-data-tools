@@ -36,4 +36,4 @@ col_sep:: `;`
 row_sep:: `\n`
 quote_char:: `"`
 escape_char:: NONE!
-interesting characteristics:: unescaped `"` characters within quoted fields; `\n` appearing in quoted fields, before and after unescaped `"`
+interesting characteristics:: unescaped `"` characters within quoted fields; `\n` appearing in quoted fields, before and after unescaped `"`; the second field in https://github.com/lyrasis/csv-data-tools/blob/f4423b2234410a3ff9ecd7615c609583d21e9328/tabular_data_naraka/artists_test.csv#L22[line 22] resists the power of `reformat_csv.pl`
