@@ -16,6 +16,14 @@ Tools for working with CSV data (or other basic tabular data formats)
 
 toc::[]
 
+== chars_in_field.rb
+
+A silly utility script to output a list of unique characters used in specified field(s) of a CSV, or the whole CSV if no fields are specified.
+
+Initial use case: find all characters used in CollectionSpace media file names, so I could replace any characters unsafe for use in S3 key names with something else.
+
+Do `ruby chars_in_field.rb -h` for usage details.
+
 == `check_structure.rb`
 NOTE: Supports comma, tab, or pipe delimited files currently
 
