@@ -35,6 +35,34 @@ NOTE: Supports comma, tab, or pipe delimited files currently
 
 This was a mess and I deleted it. It's being replaced by simpler scripts that do specific parts of what this did.
 
+== `compile_profiled.rb`
+
+WARNING: This initial version is very specific to the CSU project, but this might be generalizable for other uses.
+
+Generates a multi-tabbed Excel worksheet compiling:
+
+* unique variable values used in non-id and non-date fields, with per-data-source and total occurrence counts for each value
+* unique id patterns used in id fields
+* unique date patterns used in date fields
+
+The main value of this tool is found if:
+
+* you have *multiple clients/users/data sources* with data sets that use the same data input template(s) or metadata standard
+
+It allows you to get an overview of data to answer questions like:
+
+* has this field been used in generally the same way across data sources?
+* where two data input templates have the same field name/column header, has that field been used consistently across the templates?
+
+See https://3.basecamp.com/3410311/buckets/38281121/cloud_files/8346461511#__recording_8347588463[this locked-to-Lyrasis Basecamp file description] for details on what this produces and how you might use it.
+
+Assumes you have generated profile detail files for all data sources by running:
+
+`ruby profiler.rb -i ~/data/export/ -o ~/data/profiled -s tsv -c '{col_sep: "\t"} -d compiled'`
+
+The output path from the above will be the input path for this script.
+
+
 == `convert_encoding.rb`
 
 WARNING: script not finished. **Do not use yet**
