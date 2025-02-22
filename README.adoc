@@ -88,7 +88,7 @@ Prints to screen a the following info for all files with suffix in the directory
 * size
 * result of unix `file` command (file encoding, presence of "very long lines," line terminators)
 
-Do `ruby file_info.rb` for parameters/options.
+Do `ruby file_info.rb -h` for parameters/options.
 
 Example output:
 
