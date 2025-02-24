@@ -243,7 +243,7 @@ Do `ruby tables_and_columns.rb -h` for parameters/options.
 
 Useful for initial data review work.
 
-Reads all files with given file suffix in the given directory. For each, prints out the file/table name, headers, and the first 25 rows of data, nicely formatted, in one text file you can scroll/search through. You don't have to open a million files to get your head around the general shape and character of the data.
+Reads all files with given file suffix in the given directory. For each, prints out the file/table name, headers, and the first X (set max num of rows when script is run) rows of data, nicely formatted, in one text file you can scroll/search through. You don't have to open a million files to get your head around the general shape and character of the data.
 
 *Requires `csvlook` from https://csvkit.readthedocs.io/en/latest/index.html[csvkit] to be installed and available in your PATH*
 
