@@ -108,6 +108,14 @@ dbo_dtproperties.txt:
   info: Little-endian UTF-16 Unicode text, with very long lines, with CRLF line terminators
 ----
 
+== `find_ctrl_chars.rb`
+
+Works on one file at a time. Reports out any non-EOL characters in https://www.compart.com/en/unicode/category/Cc[the Unicode Control category], in context so the locations can be found in file.
+
+WARNING: output is weird for combined/composed characters, but currently works ok enough for identifying issues that I'm not putting more time into fixing it.
+
+Do `ruby find_ctrl_chars.rb -h` for parameters/options.
+
 == `profiler.rb`
 
 Usage example: Defaults:
