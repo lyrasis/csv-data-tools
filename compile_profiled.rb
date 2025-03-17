@@ -56,12 +56,20 @@ class ColVal
     }
     fc_cols = file_col_columns(file_cols, rows)
     base[:total_occs] = fc_cols.values.sum
+    base[:in_sources] = fc_cols.values.reject{ |val| val == 0 }.length
+    base[:in_inv] = in_type?(fc_cols, :inv)
+    base[:in_sum] = in_type?(fc_cols, :sum)
     base.merge(fc_cols)
   end
 
   private
 
   attr_reader :value
+
+  def in_type?(cols, type)
+    result = cols.select { |k, v| k.to_s.start_with?(type.to_s) && v > 0 }
+    result.size > 0 ? "y" : nil
+  end
 
   def file_col_columns(file_cols, rows)
     file_cols.map { |file_col| set_file_col(file_col, rows) }
@@ -100,81 +108,93 @@ class FileCol
 end
 
 class RowChecker
-  INV_FIELDS = ["accession date",
-                "additional collections notes",
-                "agency/museum name",
-                "anthropologist name",
-                "archaeologist name",
-                "basis of determination",
-                "collection history",
-                "collection type",
-                "collector name",
+  INV_FIELDS = ["inventories excel id",
+                "inventoryid",
+                "username",
+                "institutename",
+                "agencyormuseumname",
+                "geographicallocationcounty",
+                "geographicallocationcity",
+                "geographicallocationotherinformation",
+                "sitenumberorname",
+                "iteminformation",
+                "collectiontypename",
+                "sourcetypename",
+                "archaeologist",
+                "donor",
+                "collector",
+                "anthropologist",
+                "ethnographer",
+                "collected directly by museum/agency",
+                "dateremovedfromsite",
+                "accessiondate",
+                "testingtreatmentname",
+                "collectionhistory",
+                "minimumnumberofindividuals",
+                "identifiedafo",
+                "afodescription",
+                "afoaccessionnumber",
+                "afocataloguenumber",
+                "additionalcollectionsnotes",
+                "tribalidentifications",
                 "consultation",
-                "contact email",
-                "contact first name",
-                "contact last name",
-                "contact title",
-                "contact website",
-                "cultural affiliation",
-                "current location",
-                "date removed from site",
-                "donor name",
-                "ethnographer name",
-                "geographical location city",
-                "geographical location county",
-                "geographical location other information",
-                "identified afo accession number",
-                "identified afo catalogue number",
-                "identified afo description",
-                "identified afo(associated funerary objects)",
-                "inventories excel id",
-                "inventory status (preliminary or final)",
-                "item/lot information",
-                "mni(minimum number of individuals)",
-                "nahc inventory id",
+                "culturalaffiliationtypename",
+                "basisofdetermination",
+                "contacttitle",
+                "contactfirstname",
+                "contactlastname",
+                "contactemail",
+                "contactwebsite",
+                "websiteinformation",
+                "currentlocation",
                 "notes",
-                "repatriation status",
-                "site number/name",
-                "source type",
-                "testing/treatment",
-                "tribal identifications",
-                "website information"].freeze
-  SUM_FIELDS = ["accession date",
-                "accession number",
-                "agency/museum name",
-                "anthropologist name",
-                "archaeologist name",
-                "basis of determination",
-                "collection type",
-                "collector name",
-                "consultation",
-                "contact email",
-                "contact first name",
-                "contact last name",
-                "contact title",
-                "contact website",
-                "cultural affiliation",
-                "current location",
-                "date removed from site",
+                "statusname",
+                "repatriationstatusname",
+                "dateinventoryreceived",
+                "tribalresponse",
+                "published"].freeze
+  SUM_FIELDS = ["summary excel id",
+                "summaryid",
+                "username",
+                "institutename",
+                "summarytypename",
+                "agencyormuseumname",
                 "description",
-                "donor name",
-                "ethnographer name",
-                "faunal material",
-                "geographical location city",
-                "geographical location county",
-                "geographical location other information",
-                "human remains",
-                "nahc summary id",
-                "number of objects",
-                "repatriation status",
-                "site number/name",
-                "source type",
-                "summary excel id",
-                "summary status (preliminary or final)",
-                "summary type",
-                "testing/treatment",
-                "tribal identifications",
-                "website information"].freeze
+                "humanremains",
+                "faunalmaterial",
+                "geographicallocationcounty",
+                "geographicallocationcity",
+                "geographicallocationotherinformation",
+                "sitenumberorname",
+                "numberofobjects",
+                "collectiontypename",
+                "sourcetypename",
+                "archaeologist",
+                "donor",
+                "collector",
+                "anthropologist",
+                "ethnographer",
+                "collected directly by museum/agency",
+                "dateremovedfromsite",
+                "accessionnumber",
+                "accessiondate",
+                "testingtreatmentname",
+                "tribalidentifications",
+                "consultation",
+                "culturalaffiliationtypename",
+                "basisofdetermination",
+                "contacttitle",
+                "contactfirstname",
+                "contactlastname",
+                "contactemail",
+                "contactwebsite",
+                "websiteinformation",
+                "currentlocation",
+                "statusname",
+                "repatriationstatusname",
+                "datesummaryreceived",
+                "tribalresponse",
+                "published"].freeze
 
   class << self
     def known_field?(row)
@@ -191,10 +211,9 @@ class Compiler
     @table = table
     @base_cols = [:colname, :value]
     @id_fields = ["inventories excel id", "summary excel id",
-                  "nahc inventory id", "nahc summary id", "accession number",
-                  "identified afo accession number",
-                  "identified afo catalogue number"]
-    @date_fields = ["date removed from site", "accession date"]
+                  "inventoryid", "summaryid", "accessionnumber",
+                  "afoaccessionnumber", "afocataloguenumber"]
+    @date_fields = ["dateremovedfromsite", "accessiondate"]
   end
 
 
@@ -327,8 +346,8 @@ class Compiler
       .map { |key, val| ColVal.new(key, val) }
   end
 
-  def headers = @headers ||= [base_cols, file_cols.map(&:to_sym), :total_occs]
-    .flatten
+  def headers = @headers ||= [base_cols, file_cols.map(&:to_sym), :in_sources,
+                              :in_inv, :in_sum, :total_occs].flatten
 end
 
 class Table
