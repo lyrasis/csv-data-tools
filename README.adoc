@@ -79,6 +79,14 @@ If you have not installed or used the `charlock_holmes` gem before, you need to:
 `bundle config build.charlock_holmes --with-icu-dir=/usr/local/opt/icu4c`
 ====
 
+== `field_signatures.rb`
+
+"Field signature" refers to "the fields in a row that are actually populated."
+
+Given a path to a CSV file, this script generates a new CSV that lets you see what field signatures are used in the source file. Number of occurrences and example IDs of records having each field signature are output, along with one column per source file column. If the column has "X" then it's populated in the field signature.
+
+You will need to customize the `ID_HEADERS` variable in the script to include the name of any column(s) in your file that should be treated as row IDs.
+
 == `file_info.rb`
 
 Given path to a directory, a file suffix, and an optional minimum file size (in bytes)...
