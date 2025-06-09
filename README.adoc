@@ -31,10 +31,6 @@ NOTE: Supports comma, tab, or pipe delimited files currently
 * If a file has any ragged rows, it tells you how many columns the weird rows have and gives you the row numbers of up to 3 rows having that number of columns.
 * Where the example field for a non-ok file is blank, that's the expected/correct number of columns based on the number of headers
 
-== `clean_convert_report.rb`
-
-This was a mess and I deleted it. It's being replaced by simpler scripts that do specific parts of what this did.
-
 == `compile_profiled.rb`
 
 WARNING: This initial version is very specific to the CSU project, but this might be generalizable for other uses.
@@ -78,6 +74,14 @@ If you have not installed or used the `charlock_holmes` gem before, you need to:
 
 `bundle config build.charlock_holmes --with-icu-dir=/usr/local/opt/icu4c`
 ====
+
+== `empty_columns.rb`
+
+Initially, works on a single CSV file. Outputs to STDOUT a list of column headers where there are literally no data values in the column (i.e. column value is nil or an empty string).
+
+Use case: quick list for use in quotes/estimates.
+
+NOTE: Isn't smart enough to recognize stuff like "This column value is always `0` so it's probably a default value automatically set by the source system and doesn't mean anything"
 
 == `field_signatures.rb`
 
@@ -123,6 +127,12 @@ Works on one file at a time. Reports out any non-EOL characters in https://www.c
 WARNING: output is weird for combined/composed characters, but currently works ok enough for identifying issues that I'm not putting more time into fixing it.
 
 Do `ruby find_ctrl_chars.rb -h` for parameters/options.
+
+== `populated_columns.rb`
+
+Initially, works on a single CSV file. Outputs to STDOUT a list of column headers where there is at least one non-empty/nil value in the column.
+
+Use case: quick list for use in quotes/estimates.
 
 == `profiler.rb`
 
