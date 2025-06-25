@@ -5,12 +5,11 @@
 require 'bundler/inline'
 gemfile do
   source 'https://rubygems.org'
+  gem 'csv'
   gem 'pry'
 end
 
-require 'csv'
 require 'optparse'
-require 'pry'
 
 options = {
   delimiter: ',',
