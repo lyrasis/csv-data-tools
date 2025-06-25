@@ -23,7 +23,7 @@ OptionParser.new do |opts|
     options[:input] = File.expand_path(i)
   end
 
-  opts.on('-o', '--output PATH', 'Path to output directory') do |o|
+  opts.on('-o', '--output PATH', 'Path to output file') do |o|
     options[:output] = File.expand_path(o)
   end
 
@@ -59,17 +59,15 @@ def get_delim_opt(delim)
 
   "-d #{delim}"
 end
-              
+
 delim_opt = get_delim_opt(options[:delimiter])
+
 
 files = Dir.children(options[:input])
   .select{ |name| name.downcase.end_with?(options[:suffix]) }
   .map{ |name| "#{options[:input]}/#{name}" }
 
-# makes output dir if it doesn't exist; does nothing otherwise
-FileUtils.mkdir_p(options[:output])
-
-File.open("#{options[:output]}/table_preview.txt", 'w') do |f|
+File.open(options[:output], 'w') do |f|
   files.each do |table|
     puts "  #{table}"
     f.puts "-=-=-=-=-=-=-=-=-=-=-=-=-"
