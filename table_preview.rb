@@ -50,6 +50,8 @@ CustomCsvlookOptions = '-u 1 -y 0 -I'
 unless options[:output]
   options[:output] = File.join(options[:input], "table_preview.txt")
 end
+options[:max_rows] = 15 unless options[:max_rows]
+
 def get_delim_opt(delim)
   lookup = {
     'comma' => '-d ,',
