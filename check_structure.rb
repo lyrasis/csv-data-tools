@@ -2,52 +2,52 @@
 
 # Rolled it myself because csv-lint gem wanted to report spurious invalid encoding for US-ASCII files
 #   and not report ragged columns in said files
-require 'bundler/inline'
+require "bundler/inline"
 gemfile do
-  source 'https://rubygems.org'
-  gem 'csv'
-  gem 'pry'
+  source "https://rubygems.org"
+  gem "csv"
+  gem "pry"
 end
 
-require 'optparse'
+require "optparse"
 
 options = {
-  delimiter: ',',
-  suffix: 'csv'
+  delimiter: ",",
+  suffix: "csv"
 }
 OptionParser.new do |opts|
-  opts.banner = 'Usage: check_structure.rb -i path-to-input-dir -s file_suffix -d delimiter_name -o output_file'
+  opts.banner = "Usage: check_structure.rb -i path-to-input-dir -s file_suffix -d delimiter_name -o output_file"
 
-  opts.on('-i', '--input PATH', String, 'Path to input directory containing files') do |i|
+  opts.on("-i", "--input PATH", String, "Path to input directory containing files") do |i|
     options[:input] = File.expand_path(i)
   end
 
-  opts.on('-s', '--suffix STRING', String, 'File suffix, without dot') do |s|
-    options[:suffix] = ".#{s.delete_prefix('.')}"
+  opts.on("-s", "--suffix STRING", String, "File suffix, without dot") do |s|
+    options[:suffix] = ".#{s.delete_prefix(".")}"
   end
 
-  opts.on('-d', '--delimiter STRING', String, 'Delimiter name: comma (default), tab, pipe') do |d|
+  opts.on("-d", "--delimiter STRING", String, "Delimiter name: comma (default), tab, pipe") do |d|
     translations = {
-      comma: ',',
-      pipe: '|',
+      comma: ",",
+      pipe: "|",
       tab: "\t"
     }
     allowed = translations.keys.map(&:to_s)
     d_allowed = allowed.any?(d)
 
     unless d_allowed
-      puts "#{d} is not an allowed delimiter value. Use one of: #{allowed.join(', ')}"
+      puts "#{d} is not an allowed delimiter value. Use one of: #{allowed.join(", ")}"
       exit
     end
-    
+
     options[:delimiter] = translations[d.to_sym]
   end
 
-  opts.on('-o', '--output PATH', String, 'Path to output CSV file') do |o|
+  opts.on("-o", "--output PATH", String, "Path to output CSV file") do |o|
     options[:output] = File.expand_path(o)
   end
 
-  opts.on('-h', '--help', 'Prints this help') do
+  opts.on("-h", "--help", "Prints this help") do
     puts opts
     exit
   end
@@ -78,7 +78,7 @@ end
 class RaggedReport
   attr_reader :count, :examples
   Sufficient_Examples = 3
-  
+
   def initialize
     @count = 0
     @examples = {}
@@ -114,7 +114,7 @@ class RowReport
   def ok?
     @ragged.empty?
   end
-  
+
   def record(row, ind)
     col_ct = row.length
     col_ct == header_ct ? report_expected : report_ragged(col_ct, row, ind)
@@ -131,7 +131,7 @@ class RowReport
 
     @ragged[col_ct] = RaggedReport.new
   end
-  
+
   def report_ragged(col_ct, row, ind)
     prepare_ragged_report(col_ct)
     @ragged[col_ct].add(row, ind)
@@ -143,11 +143,11 @@ class CumulativeReport
   def initialize(path)
     @path = path
     headers = %w[filename ok? col_ct occurrences example_rows]
-    CSV.open(path, 'w'){ |csv| csv << headers }
+    CSV.open(path, "w"){ |csv| csv << headers }
   end
 
   def add_file_info(checker)
-    CSV.open(path, 'a') do |csv|
+    CSV.open(path, "a") do |csv|
       rows_for(checker).each{ |row| csv << row }
     end
   end
@@ -159,10 +159,10 @@ class CumulativeReport
     checker.report.ragged.each do |col_ct, details|
       rows << [
         checker.filename,
-        'n',
+        "n",
         col_ct,
         details.count,
-        details.examples.keys.join(', ')
+        details.examples.keys.join(", ")
       ]
     end
     rows
@@ -172,7 +172,7 @@ class CumulativeReport
     report = checker.report
     [
       checker.filename,
-      checker.ok? ? 'y' : 'n',
+      checker.ok? ? "y" : "n",
       report.header_ct,
       report.correct,
       nil
@@ -197,4 +197,3 @@ files.each do |file|
   checker.check
   report.add_file_info(checker)
 end
-
