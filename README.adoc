@@ -242,18 +242,16 @@ Generally I use this iteratively with edits made to a migration-specific copy of
 
 Utility script for creating data review spreadsheet.
 
-Given a directory containing tabular data files, outputs two CSVs:
+Given a directory containing tabular data files, writes an .xlsx file with 2 tabs:
 
-* tables.csv
-** table/filename
-** column count
-** row count
+* tables
+** table
+** column ct
+** row ct
 
-* columns.csv
-** table/filename
+* columns
+** table
 ** column name
-
-These become two tabs in a data review tracking/mapping Excel sheet.
 
 Do `ruby tables_and_columns.rb -h` for parameters/options.
 
