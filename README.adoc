@@ -31,6 +31,10 @@ NOTE: Supports comma, tab, or pipe delimited files currently
 * If a file has any ragged rows, it tells you how many columns the weird rows have and gives you the row numbers of up to 3 rows having that number of columns.
 * Where the example field for a non-ok file is blank, that's the expected/correct number of columns based on the number of headers
 
+== `compact_csvs.rb`
+
+Rewrites CSV files, omitting any columns having no values. See usage comments at top of script.
+
 == `compile_profiled.rb`
 
 WARNING: This initial version is very specific to the CSU project, but this might be generalizable for other uses.
