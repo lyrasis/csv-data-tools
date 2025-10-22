@@ -81,10 +81,16 @@ end
 
 # populate rest of openstruct for each file
 files.each do |file|
-  # get row count
   rowct = %x{sed -n "=" #{file} | wc -l}.to_i
-  filedata[file].row_ct = rowct - 1
+  puts "Processing #{file} (#{rowct} rows)"
+  if rowct == 0
+    filedata[file].row_ct = rowct
+    filedata[file].column_ct = 0
+    filedata[file].columns = []
+    next
+  end
 
+  filedata[file].row_ct = rowct - 1
   headers = File.open(file, &:gets).chomp.split(options[:delimiter])
   filedata[file].column_ct = headers.size
   filedata[file].columns = headers
