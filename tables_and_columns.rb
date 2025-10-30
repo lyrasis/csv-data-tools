@@ -67,6 +67,7 @@ filedata = {}
 # get list of files
 files = Dir.children(options[:input])
   .select{ |name| name.downcase.end_with?(options[:suffix]) }
+  .sort
   .map{ |name| "#{options[:input]}/#{name}" }
 
 # create key value pairs in filedata, populating keys with file paths and values with empty OpenStructs
