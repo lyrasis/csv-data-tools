@@ -114,11 +114,16 @@ end
 
 def prepare_columns_sheet(wb, filedata)
   wb.add_worksheet(name: "columns") do |sheet|
-    headers = %w[table column]
+    headers = %w[table column column_position]
     sheet.add_row(headers)
-    filedata.values.each do |v|
-      v.columns.each do |c|
-        sheet.add_row([v.filename, c.delete_prefix('"').delete_suffix('"')])
+    filedata.values
+      .each do |v|
+      v.columns.each_with_index do |c, i|
+        sheet.add_row([
+          v.filename,
+          c.delete_prefix('"').delete_suffix('"'),
+          i + 1
+        ])
       end
     end
   end
