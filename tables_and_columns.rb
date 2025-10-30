@@ -80,9 +80,16 @@ files.each do |file|
     )
 end
 
+def get_rowct(file, suffix)
+  return CSV.parse(File.read(file), headers: true).size if suffix == ".csv"
+
+  raw = %x{sed -n "=" #{file} | wc -l}.to_i
+  raw == 0 ? 0 : raw - 1
+end
+
 # populate rest of openstruct for each file
 files.each do |file|
-  rowct = %x{sed -n "=" #{file} | wc -l}.to_i
+  rowct = get_rowct(file, options[:suffix])
   puts "Processing #{file} (#{rowct} rows)"
   if rowct == 0
     filedata[file].row_ct = rowct
@@ -91,7 +98,7 @@ files.each do |file|
     next
   end
 
-  filedata[file].row_ct = rowct - 1
+  filedata[file].row_ct = rowct
   headers = File.open(file, &:gets).chomp.split(options[:delimiter])
   filedata[file].column_ct = headers.size
   filedata[file].columns = headers
