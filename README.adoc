@@ -65,16 +65,32 @@ The output path from the above will be the input path for this script.
 
 == `convert_encoding.rb`
 
-WARNING: script not finished. **Do not use yet**
+Converts files whose encoding is not UTF-8 or ascii to UTF-8.
+
+Do `ruby convert_encoding.rb -h` for usage info.
+
+You need to create an output directory to write converted files into before running the script.
+It does not overrwrite original files.
+If the converted files look good, you can copy them back to the original location, replacing originals.
+
+[NOTE]
+====
+charlock_holmes' encoding detection is not the same as whatever the `file --mime-encoding` command uses.
+This script usually looks like it converts way too many files.
+They generally end up all being ascii/UTF-8, though, so no worries
+====
 
 [IMPORTANT]
 ====
-If you have not installed or used the `charlock_holmes` gem before, you need to:
-* install icu4c if you do not have it:
+If you have not installed or used the https://github.com/brianmario/charlock_holmes?tab=readme-ov-file[`charlock_holmes`] gem before, you need to:
+
+* Install icu4c (https://icu.unicode.org/home[C/C++ and Java libraries for Unicode and globalization]) if you do not have it:
 
 `brew install icu4c`
 
-* run the following command in your terminal before running this script:
+Check whether you have this installed by doing `brew info icu4c`.
+
+* Run the following command in your terminal before running this script:
 
 `bundle config build.charlock_holmes --with-icu-dir=/usr/local/opt/icu4c`
 ====
