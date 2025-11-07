@@ -79,6 +79,13 @@ If you have not installed or used the `charlock_holmes` gem before, you need to:
 `bundle config build.charlock_holmes --with-icu-dir=/usr/local/opt/icu4c`
 ====
 
+== `csv_to_xlsx.rb`
+
+Convert all CSVs in a directory to XLSX files where all data values are encoded as STRINGS.
+This minimizes the chance that clients opening files directly in Excel will have data messed up by Excel being "helpful".
+
+Currently only works on actual CSVs, not tab-delimited or other tabular formats.
+
 == `empty_columns.rb`
 
 Initially, works on a single CSV file. Outputs to STDOUT a list of column headers where there are literally no data values in the column (i.e. column value is nil or an empty string).
