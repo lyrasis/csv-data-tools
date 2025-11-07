@@ -139,6 +139,18 @@ WARNING: output is weird for combined/composed characters, but currently works o
 
 Do `ruby find_ctrl_chars.rb -h` for parameters/options.
 
+== `obfuscator.rb`
+
+Replaces all field values in a CSV that do not match the SKIP_PATTERNS with a MD5 digest (translated to bubblebabble) of the
+original value.
+Header values and fields matching SKIP_PATTERNS regular expressions are left as-is.
+
+Currently only works on CSVs (not other tabular data formats)
+
+Currently includes known SKIP_PATTERNS for PPWE.
+
+*See comments at top of script for more on how this works*
+
 == `populated_columns.rb`
 
 Initially, works on a single CSV file. Outputs to STDOUT a list of column headers where there is at least one non-empty/nil value in the column.
