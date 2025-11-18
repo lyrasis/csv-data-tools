@@ -49,13 +49,17 @@ require "optparse"
 # Field values matching any of these patterns are kept as-is. This is intended
 #   to retain id/foreign key linkages intact in the data
 SKIP_PATTERNS = [
-  /^\d+$/,
-  # UUIDs are sometimes used as primary/foreign keys in PP
-  /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/,
+  /^\d+$/, # digits-only data - ids, etc
+  # PPD indicates item type(s) with ALOP and sometimes includes N or Y instead
+  #   0 or 1 for boolean values
+  /^[A-Z]{1,4}$/,
   # Frequently occurring default values
   /^0\.00$/, # currency default
   /^\.0+$/, # float default
-  /^-?\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(?:\.\d{3,}| [AP]M)?$/ #date/timestamp
+  /^\/   - *$/, # phone num default value in PPD
+  /^-?\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(?:\.\d{3,}| [AP]M)?$/, #date/timestamp
+  # UUIDs are sometimes used as primary/foreign keys in PP
+  /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/
 ]
 
 options = {}
