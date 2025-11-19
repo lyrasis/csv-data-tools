@@ -303,3 +303,38 @@ Reads all files with given file suffix in the given directory. For each, prints 
 *Requires `csvlook` from https://csvkit.readthedocs.io/en/latest/index.html[csvkit] to be installed and available in your PATH*
 
 Do `ruby table_preview.rb -h` for parameters/options.
+
+== `xlsx_to_csv.rb`
+
+*Requires `in2csv` from https://csvkit.readthedocs.io/en/latest/index.html[csvkit] to be installed and available in your PATH*
+
+Converts all .xlsx files in the given directory to .csv.
+Each sheet in an .xlsx file is written to a separate .csv file.
+The script deletes .csvs written out for empty sheets.
+
+If given an output directory, the script moves the output CSVs into that directory.
+If not, it creates a new `csv` directory inside the given input directory and moves all CSV files generated into that subdirectory.
+
+.Tread with extreme caution using this script
+[WARNING]
+====
+It does not detect the encoding of the .xlsx and pass that to https://csvkit.readthedocs.io/en/latest/scripts/in2csv.html[in2csv].
+Keep an eye out for character encoding problems.
+
+For some reason it sometimes detects empty columns as "unnamed columns," warns about them, and adds placeholder header names to them.
+This is true even when I pass in2csv the `--reset-dimensions` flag.
+This seems to be sometimes caused by formatting having been applied to an entire row, rather than to just populated cells.
+It may also be caused by a weird "last cell" assignment.
+Do `Find & Select > Special > Last cell` to jump to the assigned last cell.
+See also https://support.microsoft.com/en-us/office/locate-and-reset-the-last-cell-on-a-worksheet-c9e468a8-0fc3-4f69-8038-b3c1d86e99e9[Microsoft documentation] that might help you fix this kind of thing.
+
+People format their Excel worksheets in all kind of terrible ways to make them unusable as data.
+I have no idea what this does with stuff like:
+
+* blank lines inserted in the data
+* "hanging" data (when a value applying to many rows is only filled in on one row, and visually/mentally filled in downward, *_IF YOU ARE A HUMAN LOOKING AT IT_*)
+* merged cells
+
+in2csv is called with `--no-inference` and both `--date-format` and `--datetime-format` set to `-` (i.e. do not mess with this).
+This _should_ have the effect of everything being written to CSV as text values, but I honestly don't know for sure how well this works.
+====
