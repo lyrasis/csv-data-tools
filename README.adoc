@@ -102,6 +102,12 @@ This minimizes the chance that clients opening files directly in Excel will have
 
 Currently only works on actual CSVs, not tab-delimited or other tabular formats.
 
+== `dbf2csv.pl`
+
+A Perl script Brian used to convert DBF files to CSV format. DBF files are from the FoxPro database management system, which is the backend for PastPerfect desktop editions.
+
+I have no idea if this still works, or if there are better options out there.
+
 == `empty_columns.rb`
 
 Initially, works on a single CSV file. Outputs to STDOUT a list of column headers where there are literally no data values in the column (i.e. column value is nil or an empty string).
