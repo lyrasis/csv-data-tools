@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
-# outputs two CSV files for use in putting together the data review Excel sheet
+# Given a directory containing CSV (or other delimited tabular data)
+#   files, outputs an .xslx worksheet with two tabs: tables and columns.
+#   This worksheet can be used as the base for a migration project mappings
+#   spreadsheet, or a data review.
 require "bundler/inline"
 
 gemfile do
