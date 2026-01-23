@@ -18,7 +18,11 @@ OptionParser.new do |opts|
   opts.banner = "Usage: tables_and_columns.rb -i path-to-input-dir "\
     "-s file-suffix -d comma -o path-to-output-file.xlsx"
 
-  opts.on("-i", "--input PATH", "Path to input directory containing files") do |i|
+  opts.on(
+    "-i",
+    "--input PATH",
+    "Path to input directory containing files"
+  ) do |i|
     options[:input] = File.expand_path(i)
   end
 
@@ -35,7 +39,11 @@ OptionParser.new do |opts|
     options[:suffix] = ".#{s.delete_prefix(".")}"
   end
 
-  opts.on("-d", "--delimiter STRING", "Field delimiter: tab, comma, pipe, unitsep ") do |d|
+  opts.on(
+    "-d",
+    "--delimiter STRING",
+    "Field delimiter: tab, comma, pipe, unitsep "
+  ) do |d|
     lookup = {
       "comma" => ",",
       "pipe" => "|",
@@ -61,7 +69,8 @@ unless options[:output]
   options[:output] = File.join(options[:input], "tables_and_columns.xlsx")
 end
 
-# create hash to hold openstruct objects with data about each file, with file path as keys
+# create hash to hold openstruct objects with data about each file, with file
+#   path as keys
 filedata = {}
 
 # get list of files
@@ -70,7 +79,8 @@ files = Dir.children(options[:input])
   .sort
   .map{ |name| "#{options[:input]}/#{name}" }
 
-# create key value pairs in filedata, populating keys with file paths and values with empty OpenStructs
+# create key value pairs in filedata, populating keys with file paths and values
+#   with empty OpenStructs
 files.each do |file|
   filedata[file] = OpenStruct.new(
     filename: File.basename(file, options[:suffix]).sub(/_l$/, ""),
@@ -116,7 +126,8 @@ def prepare_tables_sheet(wb, filedata)
   wb.add_worksheet(name: "tables") do |sheet|
     headers = %w[table column_ct row_ct]
     sheet.add_row(headers)
-    filedata.values.each { |v| sheet.add_row([v.filename, v.column_ct, v.row_ct]) }
+    filedata.values
+      .each { |v| sheet.add_row([v.filename, v.column_ct, v.row_ct]) }
   end
 end
 
