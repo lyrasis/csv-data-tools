@@ -271,6 +271,26 @@ Usage example:
 
 Writes semicolon delimited .csv files with unescaped quotes to tab-delimited.
 
+[#safeopen]
+== `safe_open.rb`
+
+Safely opens a CSV file with all columns as text data in LibreOffice Calc.
+
+While this can be used from terminal, the idea is that this can be used as an automation or shortcut to open CSVs without having to deal with the import dialog.
+That dialog's settings, *EXCEPT FOR THE COLUMN FORMATS*, are now sticky, but the column formats are the most important part for not having weird things happen to data when you open a CSV.
+
+Exactly how you would automate this depends on your file opening habits.
+
+Requires the `soffice` command to be available in your PATH. You can do the following in your terminal config to make this happen:
+
+[source,bash]
+----
+# Use LibreOffice on commandline
+PATH="$PATH:/Applications/LibreOffice.app/Contents/MacOS"
+----
+
+Assumes CSV is UTF-8, with comma field separator and double-quote text delimiter.
+
 == `show_rows_with_column_ct.rb`
 
 Meant to be used to investigate specific files reported by `clean_convert_report.rb` as having bad structure (i.e. ragged columns: some row having different number of columns than other rows)
