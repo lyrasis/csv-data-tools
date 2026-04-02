@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Module1" script:language="StarBasic" script:moduleType="normal">REM  *****  BASIC  *****
+
+Sub Main
+
+End Sub
+
+
+sub PrepCSV
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:DataFilterAutoFilter&quot;, &quot;&quot;, 0, Array())
+
+rem ----------------------------------------------------------------------
+dim args2(0) as new com.sun.star.beans.PropertyValue
+args2(0).Name = &quot;ToPoint&quot;
+args2(0).Value = &quot;$A$2&quot;
+
+dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args2())
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:FreezePanes&quot;, &quot;&quot;, 0, Array())
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:SelectAll&quot;, &quot;&quot;, 0, Array())
+
+rem ----------------------------------------------------------------------
+rem dispatcher.executeDispatch(document, &quot;.uno:ColumnWidth&quot;, &quot;&quot;, 0, Array())
+
+rem ----------------------------------------------------------------------
+dim args6(0) as new com.sun.star.beans.PropertyValue
+args6(0).Name = &quot;ColumnWidth&quot;
+args6(0).Value = 2540
+
+dispatcher.executeDispatch(document, &quot;.uno:ColumnWidth&quot;, &quot;&quot;, 0, args6())
+
+
+end sub
+</script:module>
