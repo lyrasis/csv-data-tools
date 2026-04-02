@@ -102,6 +102,29 @@ This minimizes the chance that clients opening files directly in Excel will have
 
 Currently only works on actual CSVs, not tab-delimited or other tabular formats.
 
+== `CSVMacros`
+
+LibreOffice macro library.
+
+See the "Import a Library" section in https://help.libreoffice.org/latest/en-US/text/sbasic/shared/01030400.html?DbPAR=BASIC[the LibreOffice Organizing Libraries and Modules documentation].
+
+Currently the library contains the following:
+
+* Module1 (default macro module)
+** Main (default base macro; doesn't actually do anything)
+** PrepCSV - Applies Autofilter (makes all columns filterable); Freezes the header row; Changes width of all columns to 1
+
+Recommended: Assign a keyboard shortcut to the PrepCSV macro and hit it as soon as the file opens.
+How to assign keyboard shortcut:
+
+* Tools > Macros > Organize Macros > Basic
+* Navigate to/select PrepCSV
+* Click the "Assign" button
+* Navigate to/select the PrepCSV macro again in the Category/Function columns at the bottom of the dialog
+* Find an unused shortcut in the top pane
+* Click the Assign button
+* Click the Save button
+
 == `dbf2csv.pl`
 
 A Perl script Brian used to convert DBF files to CSV format. DBF files are from the FoxPro database management system, which is the backend for PastPerfect desktop editions.
