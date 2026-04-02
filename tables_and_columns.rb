@@ -94,7 +94,7 @@ files.each do |file|
 end
 
 def get_rowct(file, suffix)
-  return CSV.parse(File.read(file), headers: true).size if suffix == ".csv"
+  return CSV.parse(File.read(file), headers: true, liberal_parsing: true).size if suffix == ".csv"
 
   raw = %x{sed -n "=" #{file} | wc -l}.to_i
   raw == 0 ? 0 : raw - 1
