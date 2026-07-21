@@ -388,9 +388,55 @@ in2csv is called with `--no-inference` and both `--date-format` and `--datetime-
 This _should_ have the effect of everything being written to CSV as text values, but I honestly don't know for sure how well this works.
 ====
 
+[#commands]
+== Command reference
+
+[#split]
+=== Split CSVs with header included in each smaller file
+
+[#splitxan]
+==== With xan
+
+See <<xan>>.
+
+[source,bash]
+----
+xan split -S 50000 -f smaller_{}.csv big_file.csv
+----
+
+* Smaller files will have 50000 rows. (Last file may have fewer)
+* Smaller files will be named `smaller_{}.csv`, where row number of orig file is inserted as `{}`.
+
+[#splitdefault]
+==== With default commands
+
+Step 1: Split the CSV file into parts of 100000 lines and prefix the generated files with "file_".
+
+[source,bash]
+----
+split -l 10000 -d file.csv file_
+----
+
+Step 2: Add .csv to all generated files.
+
+[source,bash]
+----
+for i in $(find file_*); do mv $i "$i.csv"; done
+----
+
+Step 3: Copy header from first generated file at the beginning of the other files.
+
+[source,bash]
+----
+for i in $(find . -type f -name "file_*.csv" -not -name "file_00.csv");
+    do echo -e "$(head -1 file_00.csv)\n$(cat $i)" > $i;
+done
+----
+
+[#seealso]
 == See also
 
-
+[#csvkit]
 === csvkit
 
 Some of the scripts here assume csvkit is installed. We have been using this tool for a long time for various CSV purposes.
@@ -401,6 +447,7 @@ https://csvkit.readthedocs.io/en/latest/index.html[docs]
 
 https://github.com/lyrasis/data-migration-docs/blob/main/tech_setup.adoc#csvkit[Lyrasis Migrations Team approved installation instructions]
 
+[#xan]
 === xan
 
 Rust-based tool. Ridiculously fast.
