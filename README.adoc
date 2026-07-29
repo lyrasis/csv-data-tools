@@ -433,6 +433,81 @@ for i in $(find . -type f -name "file_*.csv" -not -name "file_00.csv");
 done
 ----
 
+[#x_y_when_x_has_multi_y]
+=== Show X and Y values when X value is associated with multiple unique Y values
+
+This is a thing I have done frequently in the past with a pivot table, plus some copy/pasting and sorting of the pivot table.
+
+Using xan for it is MUCH faster.
+
+This technique answers questions like:
+
+* I have normalized these location values; what normalized values had more than one original form collapsed into them, and what were those normalized forms?
+* What `recordStatus` values are used/paired with more than one `descriptionLevel` value, and what `descriptionLevel` values are used for these `recordStatus` values? (We expect pairs like: `recordStatus` = "complete" and `descriptionLevel` = "full",  and `recordStatus` = "prelim" and `descriptionLevel` = "core", but need to see if there are more complex/paradoxical relationships between these values)
+
+With a file (location-local.csv) having columns:
+
+[source,bash]
+----
+❯ xan headers location-local.csv
+0 location
+1 norm
+2 termdisplayname
+----
+
+[NOTE]
+====
+The above is the result of applying the following kiba-extend transforms to a source with a `location` column:
+
+[source,ruby]
+----
+transform Delete::FieldsExcept,
+  fields: :location
+transform Clean::StripFields,
+  fields: :location
+transform Cspace::NormalizeForID,
+  source: :location,
+  target: :norm
+transform Replace::NormWithMostFrequentlyUsedForm,
+  normfield: :norm,
+  nonnormfield: :location,
+  target: :termdisplayname
+----
+
+location:: the original value
+norm:: normalized version of location
+termdisplayname:: most frequently used form of `location` for rows normalized to `norm`
+====
+
+This command:
+
+[source,bash]
+----
+xan select location,termdisplayname location-local.csv \
+| xan dedup -s location,termdisplayname \
+| xan window -g termdisplayname 'count() as unique_loc_count' \
+| xan filter 'unique_loc_count > 1' \
+| xan select location,termdisplayname \
+| xan v
+----
+
+Produces:
+
+....
+┌───┬──────────────────────┬──────────────────────┐
+│ - │ location             │ termdisplayname      │
+├───┼──────────────────────┼──────────────────────┤
+│ 0 │ ANNEX SHELF 126B     │ ANNEX SHELF 126B     │
+│ 1 │ ANNEX SHELF 126 B    │ ANNEX SHELF 126B     │
+│ 2 │ B-01 SHELF 102E      │ B-01 SHELF 102E      │
+│ 3 │ B-01 SHELF 26B BOX 9 │ B-01 SHELF 26B BOX 9 │
+│ 4 │ B-01 SHELF 26B BOX9  │ B-01 SHELF 26B BOX 9 │
+│ 5 │ B-01 Shelf 102E      │ B-01 SHELF 102E      │
+│ 6 │ SHELF 128D BOX 325   │ SHELF 128D BOX 325   │
+│ 7 │ SHELF 128D, BOX 325  │ SHELF 128D BOX 325   │
+└───┴──────────────────────┴──────────────────────┘
+....
+
 [#seealso]
 == See also
 
